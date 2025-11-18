@@ -1,14 +1,15 @@
-# Supercell Coding Test - Panu Kangas
+# Run Dashy, run! 🙂
 
-Hello! 🙂
+Run Dashy, run! is an endless runner game that I originally created for a code challenge organized by Supercell.  
 
-This is my take on the Supercell Code Challenge 2026!  
-I had fun creating my version of an Endless runner game, I hope you have fun while playing it too! 🙂
+They provided me with a very basic (and buggy 😁) base game code, I spent 12 hours debugging and developing it into a working game.  
+After the challenge I really wanted to continue developing this game, as I had so many ideas that I wanted to add to the game, but I just didn't have enough time to implement them.  
 
+That's what this repo is about 😎
 
 ## Instructions
 
-My game is called "Run Dashy, run!"  
+The game is called "Run Dashy, run!"  
 It's a game about a small yellow ball called Dashy, who loves to run far and get a loooot of points in the process.  
 
 The game has in-game instructions too, but here is a quick intro on what's to come:  
@@ -24,7 +25,7 @@ Space - Dash
 
 ### Relevant game info  
 
-The game is (surprise surprise) and endless runner, so the player's goal is to get as many points as they can by surviving in the ever moving environment.  
+It's an endless runner game, so the player's goal is to get as many points as they can by surviving in the ever moving environment.  
 
 You get points for travelling, but also for defeating enemies!  
 Defeat enemies by Dashing at them or using the Meteor attack from above.  
@@ -33,12 +34,18 @@ You lose if you touch enemies without dashing, for touching the nasty spike wall
 
 ## About the process
 
-All the game code (excluding base code and one random number generator that I commented) is done by me within the two challenge days.  
+By the end of the challenge I had implemented:  
 
-On preparation day I played around with player movement and platforms, so those were pretty much implemented at the end of Sunday.  
-On Monday I first fixed the given code base and then started adding new relevant things to it.  
+- Dashy's movement abilities and their visual effects (jump, double jump, turbo jump, meteor attack & side dash)
+- Randomly spawning enemies with continuously faster movement speed and spawn rate
+- Platforms that can be jumped on (but were penetrable from under and sided)
+- Static spike wall at the end of the screen
+- Score system and game states
+- Vanishing floor mechanic
 
-All of my additions can be found from the **UpdateList.txt** file in the repo.
+My additions after the challenge:  
+
+-
 
 ## Prerequisites
 
@@ -65,7 +72,7 @@ sudo apt install \
 
 Simply run `cmake -B build` and `cmake --build build`. This builds the executable in `./build/bin/`.
 
-The exact location of the executable may differ depending on your system and compiler. Example locations are `./build/bin/shooter` and `./build/bin/Debug/shooter.exe`.
+The exact location of the executable may differ depending on your system and compiler. Example locations are `./build/bin/runner` and `./build/bin/Debug/runner.exe`.
 
 Alternatively, you can specify a generator suited for your toolchain.
 - `cmake -B build -G"Unix Makefiles"`
@@ -82,13 +89,3 @@ Your game may not be receiving keyboard inputs. If you see "Detected a keyboard 
     - If you run from Terminal or iTerm2: enable it for that app.
     - If you run from Xcode or Visual Studio Code: enable it for that app.
 - Quit and reopen the launcher, then run your game again.
-
-
-## Submission
-
-Upload your work to Google Drive, Dropbox (or some other service), and complete the provided form with:
-- A link to your submission (remember to check permissions)
-- Your full name
-- Your email address
-
-[**SUBMIT**](https://supr.cl/hive2026submit)
