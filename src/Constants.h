@@ -19,7 +19,7 @@ const float GroundBlinkEffectTime = 3.5f;
 
 // Platforms
 const float PlatformInitSpawnTime = 3.0f;
-const float PlatformHeight = 20.f;
+const float PlatformHeight = 30.f;
 const float PlatformSpeed = -200.f;
 
 // Normal jumping

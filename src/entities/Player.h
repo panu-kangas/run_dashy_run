@@ -22,17 +22,22 @@ public:
     void update(float dt) override;
     void render(sf::RenderTarget& target) const override;
 
-	void onPlatformCollision();
+	void onPlatformCollision(sf::Vector2f pos, sf::Vector2f velocity);
 	void setOnPlatform(float posY, int platformIdx);
 	void removeFromPlatform();
 	bool isOnPlatform() { return m_isOnPlatform; };
 
 	bool isDashing() { return m_meteorAttack || m_isDashing; };
 	void resetDash();
+	void setDashInactive();
 	bool isMeteorAttacking() { return m_meteorAttack; };
 
 	bool isInAir() { return m_isInAir || m_isTurboJumping; };
 	void setFallsThroughGround(bool status);
+	void setWorldHasGround(bool status) { m_worldHasGround = status; };
+	void setIsTurboJumping(bool status) { m_isTurboJumping = status; };
+	void setIsInAir(bool status) { m_isInAir = status; };
+
 
 	void checkCameraShake(sf::RenderTarget& target);
 
@@ -40,6 +45,7 @@ public:
 
 	sf::FloatRect getPrevGlobalBounds() { return m_prevGlobalBounds; };
 	sf::Vector2f getCurPosition() { return m_position; };
+	sf::Vector2f getVelocity() { return m_velocity; };
 	sf::Vector2f getSize();
 	sf::FloatRect getGlobalBounds();
 
@@ -81,7 +87,9 @@ private:
 	bool m_spaceHold = false;
 	bool m_facingLeft = false;
 	bool m_outlineActive = true;
+
 	bool m_fallsThroughGround = false;
+	bool m_worldHasGround = true;
 
 	bool m_isOnPlatform = false;
 	int m_curPlatformIdx = -1;

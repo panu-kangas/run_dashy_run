@@ -58,6 +58,15 @@ void Player::resetDash()
 	m_outlineActive = true;
 }
 
+void Player::setDashInactive()
+{
+	m_isDashing = false;
+	m_canDash = false;
+	m_outlineActive = false;
+	m_dashCooldownClock.restart();
+}
+
+
 void Player::checkOutOfBounds()
 {
 	sf::FloatRect bounds = m_pSprite->getGlobalBounds();
@@ -70,18 +79,17 @@ void Player::checkOutOfBounds()
 		m_position.x = rightLimit;
 }
 
-void Player::onPlatformCollision()
+void Player::onPlatformCollision(sf::Vector2f position, sf::Vector2f velocity)
 {
-	m_isInAir = true;
-	m_didJump = false;
-	m_didDoubleJump = false;
-	m_meteorAttack = false;
-	m_isTurboJumping = false;
-	m_velocity.x = 0;
-	m_velocity.y = 0;
-	m_isDashing = false;
-	if (!m_isDashing)
-		m_pSprite->setColor(m_playerNormalColor);
+//	m_isInAir = true;
+//	m_didJump = false;
+//	m_didDoubleJump = false;
+//	m_meteorAttack = false;
+//	m_isTurboJumping = false;
+	m_position = position;
+	m_playerOutlines.setPosition(m_position);
+	m_velocity = velocity;
+	m_pSprite->setColor(m_playerNormalColor);
 }
 
 void Player::setOnPlatform(float posY, int platformIdx)
@@ -111,7 +119,7 @@ void Player::removeFromPlatform()
 
 void Player::checkGrounded()
 {
-	if (!m_isInAir || m_fallsThroughGround)
+	if (!m_isInAir || m_fallsThroughGround || !m_worldHasGround)
 		return ;
 
 	if (m_position.y >= GroundLevel)
@@ -120,7 +128,6 @@ void Player::checkGrounded()
 		{
 			m_cameraShake = true;
 		}
-
         m_isInAir = false;
 		m_didJump = false;
 		m_didDoubleJump = false;
@@ -228,7 +235,7 @@ void Player::checkJumps(bool wPressed)
 
 	if (wPressed && !m_wHold && !m_didDoubleJump && m_velocity.y > PlayerJumpPower + 400.f)
     {
-		if (!m_didJump)
+		if (!m_isInAir)
 		{
         	m_isInAir = true;
 			m_didJump = true;

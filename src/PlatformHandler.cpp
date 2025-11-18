@@ -68,11 +68,18 @@ void PlatformHandler::draw(sf::RenderTarget& target)
 
 void PlatformHandler::resolvePlayerCollison(int idx, Player* player)
 {
-	sf::FloatRect prevGlobalBounds = player->getPrevGlobalBounds();
-	float playerPrevBottom = prevGlobalBounds.position.y + prevGlobalBounds.size.y;
+	sf::FloatRect prevPlayerGlobalBounds = player->getPrevGlobalBounds();
+	float playerPrevBottom = prevPlayerGlobalBounds.position.y + prevPlayerGlobalBounds.size.y;
+	float playerPrevTop = prevPlayerGlobalBounds.position.y;
+	float playerPrevRight = prevPlayerGlobalBounds.position.x + prevPlayerGlobalBounds.size.x;
+	float playerPrevLeft = prevPlayerGlobalBounds.position.x;
+
 
 	sf::FloatRect platformBounds = m_platformVec[idx].getShape().getGlobalBounds();
 	float platformTop = platformBounds.position.y;
+	float platformBottom = platformBounds.position.y + platformBounds.size.y;
+	float platformLeft = platformBounds.position.x;
+	float platformRight = platformBounds.position.x + platformBounds.size.x;
 
 /*	std::cout << "*** COLLISION INFO ***\n"
 //	<< "Player curPos: x: " << player->getCurPosition().x << ", y: " << player->getCurPosition().y << "\n"
@@ -85,8 +92,38 @@ void PlatformHandler::resolvePlayerCollison(int idx, Player* player)
 
 	if (playerPrevBottom < platformTop)
 	{
-		player->setOnPlatform(platformTop - prevGlobalBounds.size.y / 2 - 3.f, idx);
+		// std::cout << "Top collision, setting player on platform!\n";
+
+		player->setOnPlatform(platformTop - prevPlayerGlobalBounds.size.y / 2 - 3.f, idx);
 		m_platformVec[idx].setHasPlayer(true);
+	}
+	else if (playerPrevTop > platformBottom)
+	{
+		// std::cout << "Bottom collision!\n";
+
+		sf::Vector2f newPosition{ player->getCurPosition().x, platformBottom + prevPlayerGlobalBounds.size.y / 2 + 3.f };
+		sf::Vector2f newVelocity { player->getVelocity().x, 0 };
+		player->onPlatformCollision(newPosition, newVelocity);
+		player->setIsTurboJumping(false);
+		player->setIsInAir(true);
+	}
+	else if (playerPrevRight < platformLeft)
+	{
+		// std::cout << "Left collision!\n";
+
+		sf::Vector2f newPosition{ platformLeft - prevPlayerGlobalBounds.size.x / 2 - 6.f, player->getCurPosition().y };
+		sf::Vector2f newVelocity { 0, player->getVelocity().y };
+		player->onPlatformCollision(newPosition, newVelocity);
+		player->setDashInactive();
+	}
+	else if (playerPrevLeft > platformRight)
+	{
+		// std::cout << "Right collision!\n";
+
+		sf::Vector2f newPosition{ platformRight + prevPlayerGlobalBounds.size.x / 2 + 6.f, player->getCurPosition().y };
+		sf::Vector2f newVelocity { 0, player->getVelocity().y };
+		player->onPlatformCollision(newPosition, newVelocity);
+		player->setDashInactive();
 	}
 	
 }

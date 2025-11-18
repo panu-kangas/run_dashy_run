@@ -119,7 +119,8 @@ void StatePlaying::handleGroundBlinking()
 
 	if (m_groundBlinkClock.getElapsedTime().asSeconds() > GroundBlinkEffectTime)
 	{
-		m_isGroundVisible = m_hasGround;
+		m_isGroundVisible = false;
+		m_pPlayer->setWorldHasGround(false);
 		m_isGroundBlinking = false;
 		m_prevBlink = 0.0f;
 		m_groundDissappearClock.start();
@@ -143,6 +144,7 @@ void StatePlaying::handleGroundDissappear()
 	{
 		m_hasGround = true;
 		m_isGroundVisible = true;
+		m_pPlayer->setWorldHasGround(true);
 		m_groundDissappearClock.restart();
 	}
 	handleGroundBlinking();
