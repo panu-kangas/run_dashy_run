@@ -53,6 +53,7 @@ My additions after the challenge:
 - Updated dash reset logic - when player successfully hits and enemy with a dash, both the dash and jumping abilities get a reset.
 - Fixed a bug where player would stop on the ground level briefly even when the floor has vanished
 - Made the platforms solid - added bottom, left and right collisions for them
+- Added new obstacle to the game: a wall with a gap. Player needs to move themselves through the gap in order to survive.
   
 
 ## Prerequisites
