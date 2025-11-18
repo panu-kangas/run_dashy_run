@@ -26,16 +26,18 @@ bool Player::init()
         return false;
 	}
 
-	m_prevPos = m_position;
     m_rotation = sf::degrees(0);
-    sf::FloatRect localBounds = m_pSprite->getLocalBounds();
 	m_pSprite->setScale(sf::Vector2f(3.0f, 3.0f));
+    sf::FloatRect localBounds = m_pSprite->getLocalBounds();
     m_pSprite->setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});
     m_pSprite->setPosition(m_position);
 	m_playerNormalColor = m_pSprite->getColor();
     m_collisionRadius = collisionRadius;
 
-	m_playerOutlines.setRadius(localBounds.size.x + 11.f);
+	sf::FloatRect globalBounds = m_pSprite->getGlobalBounds();
+	m_prevGlobalBounds = globalBounds;
+
+	m_playerOutlines.setRadius(globalBounds.size.x / 2 + 3.f);
 	m_playerOutlines.setFillColor(sf::Color::White);
 	m_playerOutlines.setPosition(m_position);
 	sf::FloatRect outlineLocalBounds = m_playerOutlines.getLocalBounds();
@@ -50,15 +52,17 @@ bool Player::init()
 
 void Player::resetDash()
 {
+	m_didJump = false;
+	m_didDoubleJump = false;
 	m_canDash = true;
 	m_outlineActive = true;
 }
 
 void Player::checkOutOfBounds()
 {
-	sf::FloatRect localBounds = m_pSprite->getLocalBounds();
-	float leftLimit = 0.0f + localBounds.size.x;
-	float rightLimit = ScreenWidth - localBounds.size.x;
+	sf::FloatRect bounds = m_pSprite->getGlobalBounds();
+	float leftLimit = 0.0f + bounds.size.x / 2;
+	float rightLimit = ScreenWidth - bounds.size.x / 2;
 
 	if (m_position.x < leftLimit)
 		m_position.x = leftLimit;
@@ -69,6 +73,7 @@ void Player::checkOutOfBounds()
 void Player::onPlatformCollision()
 {
 	m_isInAir = true;
+	m_didJump = false;
 	m_didDoubleJump = false;
 	m_meteorAttack = false;
 	m_isTurboJumping = false;
@@ -84,12 +89,14 @@ void Player::setOnPlatform(float posY, int platformIdx)
 	if (m_meteorAttack)
 		m_cameraShake = true;
 	m_isInAir = false;
+	m_didJump = false;
 	m_didDoubleJump = false;
 	m_meteorAttack = false;
 	m_isTurboJumping = false;
 	m_isOnPlatform = true;
 	m_curPlatformIdx = platformIdx;
 	m_position.y = posY;
+	m_playerOutlines.setPosition(m_position);
 	if (!m_isDashing)
 		m_pSprite->setColor(m_playerNormalColor);
 }
@@ -115,8 +122,10 @@ void Player::checkGrounded()
 		}
 
         m_isInAir = false;
+		m_didJump = false;
 		m_didDoubleJump = false;
 		m_meteorAttack = false;
+		m_fallsThroughGround = false;
 		m_sHold = false;
 		m_velocity.y = 0;
 		m_position.y = GroundLevel;
@@ -219,9 +228,10 @@ void Player::checkJumps(bool wPressed)
 
 	if (wPressed && !m_wHold && !m_didDoubleJump && m_velocity.y > PlayerJumpPower + 400.f)
     {
-		if (!m_isInAir)
+		if (!m_didJump)
 		{
         	m_isInAir = true;
+			m_didJump = true;
 		}
 		else
 		{
@@ -264,7 +274,7 @@ void Player::handleInput()
 
 void Player::checkTimers()
 {
-	if (m_isLoadingTurbo && m_turboLoadClock.getElapsedTime().asSeconds() >= TurboJumpLoadTime)
+	if (m_isLoadingTurbo && m_turboLoadClock.getElapsedTime().asSeconds() >= TurboJumpLoadTime && !m_fallsThroughGround)
 	{
 		m_isLoadingTurbo = false;
 		m_isTurboJumping = true;
@@ -272,7 +282,7 @@ void Player::checkTimers()
 		m_turboEffectClock.restart();
 	}
 
-	if (m_isTurboJumping && m_turboEffectClock.getElapsedTime().asSeconds() >= TurboJumpEffectTime)
+	if (m_isTurboJumping && m_turboEffectClock.getElapsedTime().asSeconds() >= TurboJumpEffectTime && !m_fallsThroughGround)
 	{
 		m_isTurboJumping = false;
 		m_isInAir = true;
@@ -293,7 +303,7 @@ void Player::checkTimers()
 
 void Player::update(float dt)
 {
-	m_prevPos = m_position;
+	m_prevGlobalBounds = m_pSprite->getGlobalBounds();
 
 	checkTimers();
 	handleInput();
@@ -301,18 +311,18 @@ void Player::update(float dt)
 
 	m_position.x += m_velocity.x * dt;
 	m_position.y += m_velocity.y * dt;
-
-	m_playerOutlines.setPosition(m_position);
-
+	m_pSprite->setPosition(m_position);
 	
 	checkOutOfBounds();
     checkGrounded();
 	updateJumpLoadBar();
+
+	m_playerOutlines.setPosition(m_position);
 }
 
 void Player::updateJumpLoadBar()
 {
-	if (!m_isLoadingTurbo)
+	if (!m_isLoadingTurbo || m_fallsThroughGround)
 	{
 		if (m_jumpLoadBar.getSize().x > 0)
 			m_jumpLoadBar.setSize({0, m_jumpLoadBar.getSize().y});
@@ -344,7 +354,6 @@ void Player::render(sf::RenderTarget& target) const
 
     target.draw(*m_pSprite);
 	target.draw(m_jumpLoadBar);
-
 }
 
 
@@ -355,7 +364,7 @@ sf::Vector2f Player::getSize()
 		return {0, 0};
 	}
 
-	return m_pSprite->getLocalBounds().size;
+	return m_pSprite->getGlobalBounds().size;
 }
 
 sf::FloatRect Player::getGlobalBounds()
@@ -398,5 +407,10 @@ bool Player::handleCameraShake(sf::RenderTarget& target)
 	m_shakeTimer.restart();
 
 	return false;
+}
+
+void Player::setFallsThroughGround(bool status)
+{
+	m_fallsThroughGround = status;
 }
 

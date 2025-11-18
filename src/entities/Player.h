@@ -31,12 +31,15 @@ public:
 	void resetDash();
 	bool isMeteorAttacking() { return m_meteorAttack; };
 
-	bool isInAir() { return m_isInAir; };
-	void setFallsThroughGround(bool status) { m_fallsThroughGround = status; };
+	bool isInAir() { return m_isInAir || m_isTurboJumping; };
+	void setFallsThroughGround(bool status);
 
 	void checkCameraShake(sf::RenderTarget& target);
 
-	sf::Vector2f getPrevPosition() { return m_prevPos; };
+//	void setOutlinePos(sf::Vector2f pos) { m_playerOutlines.setPosition(pos); };
+
+	sf::FloatRect getPrevGlobalBounds() { return m_prevGlobalBounds; };
+	sf::Vector2f getCurPosition() { return m_position; };
 	sf::Vector2f getSize();
 	sf::FloatRect getGlobalBounds();
 
@@ -66,6 +69,7 @@ private:
 	float m_shakeInterval = 0.04f;
 
 	bool m_isInAir = false;
+	bool m_didJump = false;
 	bool m_didDoubleJump = false;
 	bool m_isTurboJumping = false;
 	bool m_isLoadingTurbo = false;
@@ -83,7 +87,7 @@ private:
 	int m_curPlatformIdx = -1;
 
 	float m_speed = PlayerSpeed;
-	sf::Vector2f m_prevPos;
+	sf::FloatRect m_prevGlobalBounds;
 
 	sf::Clock m_turboLoadClock;
 	sf::Clock m_turboEffectClock;

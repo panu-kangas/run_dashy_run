@@ -50,8 +50,6 @@ bool checkRectCollision(const sf::FloatRect& rect1, const sf::FloatRect& rect2)
 }
 
 
-
-
 /**
  * 
  * This function came from ChatGPT!!

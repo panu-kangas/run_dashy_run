@@ -51,19 +51,18 @@ void StateIntro::update(float dt)
 
 void StateIntro::render(sf::RenderTarget& target) const
 {
-	drawHeaderText(m_pFont, target, "Welcome to the Introduction!");
+	drawHeaderText(m_pFont, target, "Welcome to the interactive Introduction!");
 	drawCenteredText(m_pFont, target, "Here is our main character, Dashy. Say hello!", - 320.f);
 	drawCenteredText(m_pFont, target, "Our brave little Dashy is very talented! He can:", - 260.f);
 	drawCenteredText(m_pFont, target, "- Move by using A and D keys", - 210.f, true);
 	drawCenteredText(m_pFont, target, "- Jump by using W key", - 175.f, true);
 	drawCenteredText(m_pFont, target, "- Double jump by using W again mid air", - 140.f, true);
 	drawCenteredText(m_pFont, target, "- Turbo jump by holding down S key, while on ground", - 105.f, true);
-	drawCenteredText(m_pFont, target, "- Perform a Meteor Attack my pressing S mid air", - 70.f, true);
-	drawCenteredText(m_pFont, target, "- And, do a Dash by pressing Space", - 35.f, true);
+	drawCenteredText(m_pFont, target, "- Perform a Meteor Attack by pressing S mid air", - 70.f, true);
+	drawCenteredText(m_pFont, target, "- And, do a Side Dash by pressing Space", - 35.f, true);
 	drawCenteredText(m_pFont, target, "Dashy is very powerful when dashing (space) or while performing the Meteor attack (S mid air)", 20.f, true);
 	drawCenteredText(m_pFont, target, "You can even kill enemies and get points with these skills!", 55.f, true);
-	drawCenteredText(m_pFont, target, "Please, spend some time learning all these moves and then press Enter to move on to the actual game", 200.f, true);
-
+	drawCenteredText(m_pFont, target, "Please, try these moves now and then press Enter to move on to the actual game", 200.f, true);
 
 	m_pPlayer->checkCameraShake(target);
 

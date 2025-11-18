@@ -23,13 +23,13 @@ const float PlatformHeight = 20.f;
 const float PlatformSpeed = -200.f;
 
 // Normal jumping
-const float PlayerJumpPower = -750.f;
+const float PlayerJumpPower = -780.f;
 const float Gravity = 800.f;
 
 // Turbo jump
 const float TurboJumpLoadTime = 0.8f;
 const float TurboJumpEffectTime = 0.4f;
-const float TurboJumpPower = -800.f;
+const float TurboJumpPower = -820.f;
 const float TurboJumpBarLength = 100.f;
 
 // Meteor Attack
@@ -52,8 +52,8 @@ const float EnemyMaxSpeedAddition = 1000.f;
 // Enemy Spawning
 const float EnemyInitSpawnInterval = 2.0f;
 const float EnemyMinSpawnInterval = 0.3f;
-const float EnemyMinSpawnHeight = GroundLevel;
-const float EnemyMaxSpawnHeight = 100.f;
+const float EnemyMinSpawnHeight = 100.f;
+const float EnemyMaxSpawnHeight = GroundLevel;
 const int EnemySpawnUpdateLimit = 6;
 
 // Score

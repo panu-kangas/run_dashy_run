@@ -142,10 +142,8 @@ void StatePlaying::handleGroundDissappear()
 	else if (!m_hasGround && m_groundDissappearClock.getElapsedTime().asSeconds() >= GroundReturnTime)
 	{
 		m_hasGround = true;
-		m_isGroundBlinking = true;
-		m_groundBlinkClock.restart();
+		m_isGroundVisible = true;
 		m_groundDissappearClock.restart();
-		m_groundDissappearClock.stop();
 	}
 	handleGroundBlinking();
 }
@@ -212,12 +210,9 @@ void StatePlaying::render(sf::RenderTarget& target) const
 		drawCenteredText(m_pFont, target, "Your Score:  " + std::to_string(m_pScoreHandler->getScore()), -370.f);
 	}
 
-if (m_isGroundBlinking && !m_hasEnded)
+	if (m_isGroundBlinking && !m_hasEnded)
 	{
-		if (!m_hasGround)
-			drawHeaderText(m_pFont, target, "Watch out! The floor is about to vanish!");
-		else
-			drawHeaderText(m_pFont, target, "Fjuuh, the ground is coming back again");
+		drawHeaderText(m_pFont, target, "Watch out! The floor is about to vanish!");
 	}
 
 	if (m_isGroundVisible)

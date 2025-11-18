@@ -68,16 +68,24 @@ void PlatformHandler::draw(sf::RenderTarget& target)
 
 void PlatformHandler::resolvePlayerCollison(int idx, Player* player)
 {
-	sf::Vector2f prevPos = player->getPrevPosition();
-	float playerRadius = player->getSize().x / 2;
-	float playerPrevBottom = prevPos.y + playerRadius;
+	sf::FloatRect prevGlobalBounds = player->getPrevGlobalBounds();
+	float playerPrevBottom = prevGlobalBounds.position.y + prevGlobalBounds.size.y;
 
 	sf::FloatRect platformBounds = m_platformVec[idx].getShape().getGlobalBounds();
 	float platformTop = platformBounds.position.y;
 
+/*	std::cout << "*** COLLISION INFO ***\n"
+//	<< "Player curPos: x: " << player->getCurPosition().x << ", y: " << player->getCurPosition().y << "\n"
+	<< "Player cur bottom based on global bounds: " << player->getGlobalBounds().position.y + player->getGlobalBounds().size.y << "\n"
+
+//	<< "Player prevPos: x: " << prevPos.x << ", y: " << prevPos.y << "\n"
+//	<< "Player radius: " << playerRadius << "\n"
+	<< "Player prev bottom: " << playerPrevBottom << "\n"
+	<< "Platform Top: " << platformTop << "\n\n"; */
+
 	if (playerPrevBottom < platformTop)
 	{
-		player->setOnPlatform(platformTop - playerRadius * 2 - 10.f, idx);
+		player->setOnPlatform(platformTop - prevGlobalBounds.size.y / 2 - 3.f, idx);
 		m_platformVec[idx].setHasPlayer(true);
 	}
 	

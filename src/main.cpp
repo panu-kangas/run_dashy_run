@@ -19,6 +19,7 @@ int main(int argc, char* argv[])
 
     sf::RenderWindow window(sf::VideoMode({ScreenWidth, ScreenHeight}), "Run Dashy, run!");
     window.setKeyRepeatEnabled(false);
+	window.setFramerateLimit(60);
 
     StateStack gamestates;
     if (!gamestates.push<StateMenu>())
