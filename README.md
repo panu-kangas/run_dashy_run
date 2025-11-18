@@ -50,6 +50,8 @@ My additions after the challenge:
 - Made the floor not blink when it returns
 - Fixed a bug in player border update logic
 - Fixed introduction texts to underline that it is indeed interactive
+- Updated dash reset logic - when player successfully hits and enemy with a dash, both the dash and jumping abilities get a reset.
+  
 
 ## Prerequisites
 
