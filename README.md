@@ -45,7 +45,11 @@ By the end of the challenge I had implemented:
 
 My additions after the challenge:  
 
--
+- Fixed platform collision logic, it was a bit broken before...
+- Fixed a bug, where turbo jump was possible to be executed after the floor had vanished in some scenarios
+- Made the floor not blink when it returns
+- Fixed a bug in player border update logic
+- Fixed introduction texts to underline that it is indeed interactive
 
 ## Prerequisites
 
