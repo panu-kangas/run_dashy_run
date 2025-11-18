@@ -207,11 +207,6 @@ void StatePlaying::render(sf::RenderTarget& target) const
 {
 	m_pPlayer->checkCameraShake(target);
 
-	if (!m_hasEnded)
-	{
-		drawCenteredText(m_pFont, target, "Your Score:  " + std::to_string(m_pScoreHandler->getScore()), -370.f);
-	}
-
 	if (m_isGroundBlinking && !m_hasEnded)
 	{
 		drawHeaderText(m_pFont, target, "Watch out! The floor is about to vanish!");
@@ -234,6 +229,10 @@ void StatePlaying::render(sf::RenderTarget& target) const
 	{
 		drawHeaderText(m_pFont, target, "Dashy died! Your Final score:  " + std::to_string(m_pScoreHandler->getScore()));
 		drawCenteredText(m_pFont, target, "Press P to play again");
+	}
+	else
+	{
+		drawCenteredText(m_pFont, target, "Your Score:  " + std::to_string(m_pScoreHandler->getScore()), -370.f);
 	}
 }
 

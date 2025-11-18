@@ -48,6 +48,7 @@ public:
 	sf::Vector2f getVelocity() { return m_velocity; };
 	sf::Vector2f getSize();
 	sf::FloatRect getGlobalBounds();
+	bool isFacingLeft() { return m_facingLeft; };
 
 private:
 
@@ -77,6 +78,7 @@ private:
 	bool m_isInAir = false;
 	bool m_didJump = false;
 	bool m_didDoubleJump = false;
+	bool m_didTurboJump = false;
 	bool m_isTurboJumping = false;
 	bool m_isLoadingTurbo = false;
 	bool m_meteorAttack = false;

@@ -31,12 +31,14 @@ bool Enemy::init()
 		case GROUND:
 		{
     		m_pSprite->setScale(sf::Vector2f(3.5f, 3.5f));
+			m_collisionRadius = 29.f;
 			break ;
 		}
 
 		case AIR:
 		{
     		m_pSprite->setScale(sf::Vector2f(2.5f, 2.5f));
+			m_collisionRadius = 25.f;
 			break ;
 		}
 
@@ -45,8 +47,6 @@ bool Enemy::init()
 			break ;
 		}
 	}
-
-    m_collisionRadius = collisionRadius;
 
     return true;
 }

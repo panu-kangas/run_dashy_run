@@ -22,6 +22,11 @@ const float PlatformInitSpawnTime = 3.0f;
 const float PlatformHeight = 30.f;
 const float PlatformSpeed = -200.f;
 
+// Walls
+
+const float WallThickness = 70.f;
+const float WallGap = 100.f;
+
 // Normal jumping
 const float PlayerJumpPower = -780.f;
 const float Gravity = 800.f;

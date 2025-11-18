@@ -60,6 +60,9 @@ void Player::resetDash()
 
 void Player::setDashInactive()
 {
+	if (!m_isDashing)
+		return ;
+
 	m_isDashing = false;
 	m_canDash = false;
 	m_outlineActive = false;
@@ -99,6 +102,7 @@ void Player::setOnPlatform(float posY, int platformIdx)
 	m_isInAir = false;
 	m_didJump = false;
 	m_didDoubleJump = false;
+	m_didTurboJump = false;
 	m_meteorAttack = false;
 	m_isTurboJumping = false;
 	m_isOnPlatform = true;
@@ -131,6 +135,7 @@ void Player::checkGrounded()
         m_isInAir = false;
 		m_didJump = false;
 		m_didDoubleJump = false;
+		m_didTurboJump = false;
 		m_meteorAttack = false;
 		m_fallsThroughGround = false;
 		m_sHold = false;
@@ -235,7 +240,7 @@ void Player::checkJumps(bool wPressed)
 
 	if (wPressed && !m_wHold && !m_didDoubleJump && m_velocity.y > PlayerJumpPower + 400.f)
     {
-		if (!m_isInAir)
+		if (!m_didJump && !m_didTurboJump)
 		{
         	m_isInAir = true;
 			m_didJump = true;
@@ -292,6 +297,7 @@ void Player::checkTimers()
 	if (m_isTurboJumping && m_turboEffectClock.getElapsedTime().asSeconds() >= TurboJumpEffectTime && !m_fallsThroughGround)
 	{
 		m_isTurboJumping = false;
+		m_didTurboJump = true;
 		m_isInAir = true;
 	}
 

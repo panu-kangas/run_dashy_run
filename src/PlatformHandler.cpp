@@ -7,12 +7,37 @@
 void PlatformHandler::spawnPlatform()
 {
 
-	float platformX = ScreenWidth;
-	float platformY = randomFloat(m_platformHeightLimits.first, m_platformHeightLimits.second);
-	float platformSizeX = randomFloat(m_platformLengthLimits.first, m_platformLengthLimits.second);
-	float platformSizeY = PlatformHeight;
+	float rand = randomFloat(0, 100);
 
-	m_platformVec.push_back(Platform({platformX, platformY}, {platformSizeX, platformSizeY}, PlatformSpeed));
+	if (rand <= 30)
+	{
+		// Spawn a wall with a gap
+		
+		float gapStartY = randomFloat(60, GroundLevel - WallGap - 30);
+
+		float platformY1 = 0;
+		float platformSizeY1 = gapStartY;
+	
+		float platformY2 = platformSizeY1 + WallGap;
+		float platformSizeY2 = ScreenHeight - platformY2;
+
+		float platformX = ScreenWidth;
+		float platformSizeX = WallThickness;
+	
+		m_platformVec.push_back(Platform({platformX, platformY1}, {platformSizeX, platformSizeY1}, PlatformSpeed));
+		m_platformVec.push_back(Platform({platformX, platformY2}, {platformSizeX, platformSizeY2}, PlatformSpeed));
+	}
+	else
+	{
+		// Spawn a platform
+
+		float platformX = ScreenWidth;
+		float platformY = randomFloat(m_platformHeightLimits.first, m_platformHeightLimits.second);
+		float platformSizeX = randomFloat(m_platformLengthLimits.first, m_platformLengthLimits.second);
+		float platformSizeY = PlatformHeight;
+
+		m_platformVec.push_back(Platform({platformX, platformY}, {platformSizeX, platformSizeY}, PlatformSpeed));
+	}
 
 }
 
@@ -111,7 +136,7 @@ void PlatformHandler::resolvePlayerCollison(int idx, Player* player)
 	{
 		// std::cout << "Left collision!\n";
 
-		sf::Vector2f newPosition{ platformLeft - prevPlayerGlobalBounds.size.x / 2 - 6.f, player->getCurPosition().y };
+		sf::Vector2f newPosition{ platformLeft - prevPlayerGlobalBounds.size.x / 2 - 10.f, player->getCurPosition().y };
 		sf::Vector2f newVelocity { 0, player->getVelocity().y };
 		player->onPlatformCollision(newPosition, newVelocity);
 		player->setDashInactive();
@@ -120,10 +145,31 @@ void PlatformHandler::resolvePlayerCollison(int idx, Player* player)
 	{
 		// std::cout << "Right collision!\n";
 
-		sf::Vector2f newPosition{ platformRight + prevPlayerGlobalBounds.size.x / 2 + 6.f, player->getCurPosition().y };
+		sf::Vector2f newPosition{ platformRight + prevPlayerGlobalBounds.size.x / 2 + 10.f, player->getCurPosition().y };
 		sf::Vector2f newVelocity { 0, player->getVelocity().y };
 		player->onPlatformCollision(newPosition, newVelocity);
 		player->setDashInactive();
+	}
+	else
+	{
+		// Backup for failing detection
+
+		float playerCenter = player->getCurPosition().x;
+
+		if (playerCenter > platformRight)
+		{
+			sf::Vector2f newPosition{ platformRight + prevPlayerGlobalBounds.size.x / 2, player->getCurPosition().y };
+			sf::Vector2f newVelocity { 0, player->getVelocity().y };
+			player->onPlatformCollision(newPosition, newVelocity);
+			player->setDashInactive();
+		}
+		else
+		{
+			sf::Vector2f newPosition{ platformLeft - prevPlayerGlobalBounds.size.x / 2, player->getCurPosition().y };
+			sf::Vector2f newVelocity { 0, player->getVelocity().y };
+			player->onPlatformCollision(newPosition, newVelocity);
+			player->setDashInactive();
+		}
 	}
 	
 }
