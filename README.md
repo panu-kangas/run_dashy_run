@@ -51,6 +51,8 @@ My additions after the challenge:
 - Fixed a bug in player border update logic
 - Fixed introduction texts to underline that it is indeed interactive
 - Updated dash reset logic - when player successfully hits and enemy with a dash, both the dash and jumping abilities get a reset.
+- Fixed a bug where player would stop on the ground level briefly even when the floor has vanished
+- Added bottom collision to platforms
   
 
 ## Prerequisites
