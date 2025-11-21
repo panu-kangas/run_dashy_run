@@ -59,7 +59,7 @@ const float EnemyInitSpawnInterval = 2.0f;
 const float EnemyMinSpawnInterval = 0.3f;
 const float EnemyMinSpawnHeight = 100.f;
 const float EnemyMaxSpawnHeight = GroundLevel;
-const int EnemySpeedUpdateInterval = 5.0f;
+const int EnemySpeedUpdateInterval = 8.0f;
 
 // Enemy shooting
 

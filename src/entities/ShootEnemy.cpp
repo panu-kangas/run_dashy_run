@@ -16,8 +16,13 @@ void ShootEnemy::shoot()
 {
 	std::unique_ptr<Projectile> projPtr;
 	
-	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{0.f, ShootEnemyProjSpeed});
+	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{-1 * ShootEnemyProjSpeed, ShootEnemyProjSpeed});
+    m_projVec.push_back(std::move(projPtr));
 
+	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{0.f, ShootEnemyProjSpeed});
+    m_projVec.push_back(std::move(projPtr));
+
+	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{ShootEnemyProjSpeed, ShootEnemyProjSpeed});
     m_projVec.push_back(std::move(projPtr));
 }
 

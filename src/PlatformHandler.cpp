@@ -6,10 +6,9 @@
 
 void PlatformHandler::spawnPlatform()
 {
+	float rand = randomFloat(0, 150);
 
-	float rand = randomFloat(0, 100);
-
-	if (rand <= 30)
+	if (rand <= 20)
 	{
 		// Spawn a wall with a gap
 		

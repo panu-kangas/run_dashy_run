@@ -8,7 +8,7 @@ Projectile::Projectile(sf::Vector2f position, sf::Vector2f velocity) : Entity(po
 	m_velocity = velocity;
 
 	m_shape.setSize({12.f, 12.f});
-	m_shape.setFillColor(sf::Color::Red);
+	m_shape.setFillColor(sf::Color(169, 169, 169));
 	m_shape.setPosition(m_position);
 }
 

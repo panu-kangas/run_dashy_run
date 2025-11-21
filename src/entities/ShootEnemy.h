@@ -25,6 +25,7 @@ private:
 	bool m_isShooting = false;
 	bool m_hasShot = false;
 
+	// PANU: This needs to be adjusted in comparison to speed. Othervise enemies just speed through and neves shoot
 	sf::Clock m_shootStartClock;
 	sf::Clock m_shootEffectClock;
 
