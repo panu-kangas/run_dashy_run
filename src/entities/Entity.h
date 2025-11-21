@@ -11,6 +11,7 @@ class Entity
 public:
     Entity() = default;
     Entity(const sf::Vector2f& position, const sf::Angle& rotation);
+	virtual ~Entity() = default;
 
     virtual bool init() = 0;
     virtual void update(float dt) = 0;

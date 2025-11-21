@@ -10,7 +10,8 @@
 enum eEnemyType
 {
 	GROUND,
-	AIR
+	AIR,
+	SHOOT
 };
 
 namespace sf { class Sprite; }
@@ -28,7 +29,7 @@ public:
     void update(float dt) override;
     void render(sf::RenderTarget& target) const override;
 
-private:
+protected:
 
 	float m_speed = GroundEnemyBaseSpeed;
 	eEnemyType m_type = GROUND;

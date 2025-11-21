@@ -14,14 +14,24 @@ Enemy::Enemy(float speed, eEnemyType type)
 
 bool Enemy::init()
 {
-    const sf::Texture* pTexture = ResourceManager::getOrLoadTexture("enemy.png");
-    if (pTexture == nullptr)
-        return false;
+	const sf::Texture* pTexture;
+
+	if (m_type != SHOOT)
+	{
+		pTexture = ResourceManager::getOrLoadTexture("enemy.png");
+		if (pTexture == nullptr)
+			return false;
+	}
+	else
+	{
+		pTexture = ResourceManager::getOrLoadTexture("some_red_thing.png");
+		if (pTexture == nullptr)
+			return false;
+	}
 
     m_pSprite = std::make_unique<sf::Sprite>(*pTexture);
     if (!m_pSprite)
         return false;
-
     sf::FloatRect localBounds = m_pSprite->getLocalBounds();
     m_pSprite->setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});
     m_pSprite->setPosition(m_position);
@@ -38,6 +48,13 @@ bool Enemy::init()
 		case AIR:
 		{
     		m_pSprite->setScale(sf::Vector2f(2.5f, 2.5f));
+			m_collisionRadius = 25.f;
+			break ;
+		}
+
+		case SHOOT:
+		{
+			m_pSprite->setScale(sf::Vector2f(2.5f, 2.5f));
 			m_collisionRadius = 25.f;
 			break ;
 		}

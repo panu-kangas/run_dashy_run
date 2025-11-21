@@ -19,7 +19,9 @@ class EnemySpawner
 
 	float m_enemySpawnInterval = EnemyInitSpawnInterval;
 	float m_enemySpeedAddition = 0.0f;
-	int m_enemyCount = 0;
+//	int m_enemyCount = 0;
+
 	sf::Clock m_spawnClock;
+	sf::Clock m_speedUpdateClock;
 
 };

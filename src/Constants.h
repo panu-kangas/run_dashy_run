@@ -23,7 +23,6 @@ const float PlatformHeight = 30.f;
 const float PlatformSpeed = -200.f;
 
 // Walls
-
 const float WallThickness = 70.f;
 const float WallGap = 100.f;
 
@@ -51,6 +50,7 @@ const float PlayerSpeed = 400.f;
 // Enemy movement
 const float GroundEnemyBaseSpeed = 200.f;
 const float AirEnemyBaseSpeed = 300.f;
+const float ShootEnemyBaseSpeed = 100.f;
 const float EnemySpeedAddition = 50.f;
 const float EnemyMaxSpeedAddition = 1000.f;
 
@@ -59,7 +59,13 @@ const float EnemyInitSpawnInterval = 2.0f;
 const float EnemyMinSpawnInterval = 0.3f;
 const float EnemyMinSpawnHeight = 100.f;
 const float EnemyMaxSpawnHeight = GroundLevel;
-const int EnemySpawnUpdateLimit = 6;
+const int EnemySpeedUpdateInterval = 5.0f;
+
+// Enemy shooting
+
+const float ShootEnemyFireInterval = 3.0f;
+const float ShootEnemyFireEffectTime = 2.0f;
+const float ShootEnemyProjSpeed = 600.f;
 
 // Score
 
