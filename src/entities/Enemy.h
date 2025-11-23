@@ -29,6 +29,8 @@ public:
     void update(float dt) override;
     void render(sf::RenderTarget& target) const override;
 
+	eEnemyType getType() { return m_type; };
+
 protected:
 
 	float m_speed = GroundEnemyBaseSpeed;

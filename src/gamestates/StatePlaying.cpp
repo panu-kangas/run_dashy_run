@@ -52,6 +52,10 @@ bool StatePlaying::init()
 	if (!m_pScoreHandler)
 		return false;
 
+	m_pCoinHandler = std::make_unique<CoinHandler>(m_gameData);
+	if (!m_pCoinHandler)
+		return false;
+
 	m_pPlatformHandler = std::make_unique<PlatformHandler>(m_gameData);
 	if (!m_pPlatformHandler)
 		return false;
@@ -83,10 +87,33 @@ void StatePlaying::checkEnemyCollisionAndOOB()
         {
 			if (m_pPlayer->isDashing())
 			{
+				eEnemyType type = m_enemies[i]->getType();
 				std::swap(m_enemies[i], m_enemies.back());
 				m_enemies.pop_back();
 				m_pPlayer->resetDash();
-				m_pScoreHandler->addScore(10);
+
+				switch(type)
+				{
+					case GROUND:
+					{
+						m_pScoreHandler->addScore(10);
+						break ;
+					}
+					case AIR:
+					{
+						m_pScoreHandler->addScore(15);
+						break ;
+					}
+					case SHOOT:
+					{
+						m_pScoreHandler->addScore(30);
+						break ;
+					}
+					default:
+					{
+						break ;
+					}
+				}
 				continue;
 			}
 			else
@@ -183,6 +210,10 @@ void StatePlaying::updateEntities(float dt)
 		m_hasEnded = true;
 	}
 
+	// COINS
+	m_pCoinHandler->update(dt);
+	m_pCoinHandler->checkPlayerCollision(m_pPlayer.get());
+
 	// PLATFORM
 	m_pPlatformHandler->update(dt, m_pPlayer.get());
 	m_pPlatformHandler->checkPlayerCollision(m_pPlayer.get());
@@ -275,6 +306,8 @@ void StatePlaying::renderEntities(sf::RenderTarget& target) const
 	{
 		proj->render(target);
 	}
+
+	m_pCoinHandler->render(target);
 }
 
 
@@ -292,7 +325,6 @@ void StatePlaying::render(sf::RenderTarget& target) const
 	}
 
 	renderEntities(target);
-
 	drawSpikeWall(target);
 
 	if (m_hasEnded)

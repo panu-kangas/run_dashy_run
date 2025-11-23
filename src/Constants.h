@@ -74,16 +74,21 @@ const int ShootEnemyScoreLimit = 120;
 const int WallScoreLimit = 200;
 const int GroundVanishScoreLimit = 300;
 
+// Coins
+const float CoinInitSpeed = 250.f;
+const float CoinInitSpawnInterval = 4.f;
+
 // Colors
 const sf::Color HeaderTextColor = sf::Color(227, 203, 66);
 const sf::Color GroundColor = sf::Color(21, 71, 35);
 const sf::Color PlayerDashColor = sf::Color(250, 99, 35);
 const sf::Color PlayerDashCooldownColor = sf::Color(148, 79, 6);
 
-// Structs
 
+// Structs
 
 struct GameData
 {
 	int playerScore = 0;
+	int playerCoins = 0;
 };
