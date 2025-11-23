@@ -55,6 +55,7 @@ My additions after the challenge:
 - Made the platforms solid - added bottom, left and right collisions for them
 - Added new obstacle to the game: a wall with a gap. Player needs to move themselves through the gap in order to survive.
 - Added new enemy type: ShootingEnemy.
+- Added Coin system: player can now collect coins while playing the game. Coins are persistant through the game, and can be later used to buy upgrades.
   
 
 ## Prerequisites
