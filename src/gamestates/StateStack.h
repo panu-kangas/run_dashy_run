@@ -11,7 +11,7 @@ public:
     template<typename T>
     bool push()
     {
-        std::unique_ptr<IState> pState = std::make_unique<T>(*this);
+        std::unique_ptr<IState> pState = std::make_unique<T>(*this, m_gameData);
         bool ok = pState && pState->init();
         if (ok) m_states.push_back(std::move(pState));
         return ok;
@@ -43,4 +43,6 @@ public:
 private:
     std::vector<std::unique_ptr<IState>> m_states;
     size_t m_popDeferredCount = 0;
+	GameData m_gameData{0};
+
 };

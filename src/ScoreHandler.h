@@ -1,18 +1,21 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "Constants.h"
 
 class ScoreHandler
 {
 	public:
 
-	void addScore(int score) { m_score += score; };
-	int getScore() { return m_score; };
+	ScoreHandler(GameData& gameData);
+
+	void addScore(int score) { m_gameData.playerScore += score; };
+	int getScore() { return m_gameData.playerScore; };
 
 	void update();
 
 	private:
 
-	int m_score = 0;
+	GameData& m_gameData;
 	sf::Clock m_scoreClock;
 };

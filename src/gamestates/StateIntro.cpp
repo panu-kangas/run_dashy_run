@@ -6,8 +6,8 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-StateIntro::StateIntro(StateStack& stateStack)
-    : m_stateStack(stateStack)
+StateIntro::StateIntro(StateStack& stateStack, GameData& gameData)
+    : m_stateStack(stateStack), m_gameData(gameData)
 {
 }
 

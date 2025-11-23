@@ -1,11 +1,14 @@
 #include "ScoreHandler.h"
-#include "Constants.h"
+
+ScoreHandler::ScoreHandler(GameData& gameData) : m_gameData(gameData)
+{
+}
 
 void ScoreHandler::update()
 {
 	if (m_scoreClock.getElapsedTime().asSeconds() < ScoreInterval)
 		return ;
 
-	m_score += 1;
+	m_gameData.playerScore += 1;
 	m_scoreClock.restart();
 }

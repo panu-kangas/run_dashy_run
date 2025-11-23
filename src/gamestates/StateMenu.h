@@ -9,7 +9,7 @@ namespace sf { class Text; };
 class StateMenu : public IState
 {
 public:
-    StateMenu(StateStack& stateStack);
+    StateMenu(StateStack& stateStack, GameData& gameData);
     ~StateMenu() = default;
 
     bool init() override;
@@ -18,6 +18,8 @@ public:
 
 public:
     StateStack& m_stateStack;
+	GameData& m_gameData;
+
     std::unique_ptr<sf::Text> m_pText;
 	const sf::Font* m_pFont;
     bool m_hasStartKeyBeenPressed = false;

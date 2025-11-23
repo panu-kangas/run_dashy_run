@@ -9,6 +9,8 @@ Projectile::Projectile(sf::Vector2f position, sf::Vector2f velocity) : Entity(po
 
 	m_shape.setSize({12.f, 12.f});
 	m_shape.setFillColor(sf::Color(169, 169, 169));
+	sf::FloatRect localBounds = m_shape.getLocalBounds();
+    m_shape.setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});
 	m_shape.setPosition(m_position);
 }
 

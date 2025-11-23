@@ -51,7 +51,7 @@ const float PlayerSpeed = 400.f;
 const float GroundEnemyBaseSpeed = 200.f;
 const float AirEnemyBaseSpeed = 300.f;
 const float ShootEnemyBaseSpeed = 100.f;
-const float EnemySpeedAddition = 50.f;
+const float EnemySpeedAddition = 30.f;
 const float EnemyMaxSpeedAddition = 1000.f;
 
 // Enemy Spawning
@@ -59,20 +59,31 @@ const float EnemyInitSpawnInterval = 2.0f;
 const float EnemyMinSpawnInterval = 0.3f;
 const float EnemyMinSpawnHeight = 100.f;
 const float EnemyMaxSpawnHeight = GroundLevel;
-const int EnemySpeedUpdateInterval = 8.0f;
+const int EnemySpeedUpdateInterval = 10.0f;
 
 // Enemy shooting
-
-const float ShootEnemyFireInterval = 3.0f;
+const float ShootEnemyShootInterval = 3.0f;
 const float ShootEnemyFireEffectTime = 2.0f;
-const float ShootEnemyProjSpeed = 600.f;
+const float ShootEnemyProjSpeed = 450.f;
 
 // Score
-
 const float ScoreInterval = 0.5f;
+
+// Score limits
+const int ShootEnemyScoreLimit = 120;
+const int WallScoreLimit = 200;
+const int GroundVanishScoreLimit = 300;
 
 // Colors
 const sf::Color HeaderTextColor = sf::Color(227, 203, 66);
 const sf::Color GroundColor = sf::Color(21, 71, 35);
 const sf::Color PlayerDashColor = sf::Color(250, 99, 35);
 const sf::Color PlayerDashCooldownColor = sf::Color(148, 79, 6);
+
+// Structs
+
+
+struct GameData
+{
+	int playerScore = 0;
+};

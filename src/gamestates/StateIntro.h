@@ -13,7 +13,8 @@ namespace sf { class Text; };
 class StateIntro : public IState
 {
 public:
-    StateIntro(StateStack& stateStack);
+	StateIntro() = delete;
+    StateIntro(StateStack& stateStack, GameData& gameData);
     ~StateIntro() = default;
 
     bool init() override;
@@ -22,6 +23,8 @@ public:
 
 public:
     StateStack& m_stateStack;
+	GameData& m_gameData;
+
 	const sf::Font* m_pFont;
     bool m_hasStartKeyBeenPressed = false;
     bool m_hasStartKeyBeenReleased = false;

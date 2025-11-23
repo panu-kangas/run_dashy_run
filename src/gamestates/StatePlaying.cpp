@@ -11,9 +11,10 @@
 
 #include <iostream>
 
-StatePlaying::StatePlaying(StateStack& stateStack)
-    : m_stateStack(stateStack)
+StatePlaying::StatePlaying(StateStack& stateStack, GameData& gameData)
+    : m_stateStack(stateStack), m_gameData(gameData)
 {
+	m_gameData.playerScore = 0;
 }
 
 bool StatePlaying::init()
@@ -43,15 +44,15 @@ bool StatePlaying::init()
         return false;
     m_pPlayer->setPosition(sf::Vector2f(200, GroundLevel));
 
-	m_pEnemySpawner = std::make_unique<EnemySpawner>();
+	m_pEnemySpawner = std::make_unique<EnemySpawner>(m_gameData);
 	if (!m_pEnemySpawner)
 		return false;
 
-	m_pScoreHandler = std::make_unique<ScoreHandler>();
+	m_pScoreHandler = std::make_unique<ScoreHandler>(m_gameData);
 	if (!m_pScoreHandler)
 		return false;
 
-	m_pPlatformHandler = std::make_unique<PlatformHandler>();
+	m_pPlatformHandler = std::make_unique<PlatformHandler>(m_gameData);
 	if (!m_pPlatformHandler)
 		return false;
 
@@ -94,16 +95,26 @@ void StatePlaying::checkEnemyCollisionAndOOB()
 				break;
 			}
         }
-
 		i++;
     }
 
     if (playerDied)
 	{
 		m_hasEnded = true;
-		// m_stateStack.popDeferred();
 
 	}
+}
+
+bool StatePlaying::isProjOOB(Projectile* proj)
+{
+	sf::FloatRect bounds = proj->getShape().getGlobalBounds();
+
+	if (bounds.position.x < 0 || bounds.position.x + bounds.size.x > ScreenWidth)
+		return true;
+	else if (bounds.position.y < 0 || bounds.position.y + bounds.size.y > GroundLevel)
+		return true;
+
+	return false;
 }
 
 void StatePlaying::handleGroundBlinking()
@@ -129,7 +140,7 @@ void StatePlaying::handleGroundBlinking()
 
 void StatePlaying::handleGroundDissappear()
 {
-	if (m_pScoreHandler->getScore() < 100)
+	if (m_pScoreHandler->getScore() < GroundVanishScoreLimit)
 		return ;
 
 	if (m_hasGround && m_groundDissappearClock.getElapsedTime().asSeconds() >= GroundDissappearInterval)
@@ -150,6 +161,79 @@ void StatePlaying::handleGroundDissappear()
 	handleGroundBlinking();
 }
 
+void StatePlaying::updateEntities(float dt)
+{
+	// PLAYER
+	m_pPlayer->update(dt);
+	if (!m_pPlayer->isInAir() && !m_pPlayer->isOnPlatform() && !m_isGroundBlinking && !m_hasGround)
+	{
+		m_pPlayer->setFallsThroughGround(true);
+	}
+
+	// Player fell out of screen
+	if (m_pPlayer->getPosition().y > ScreenHeight)
+	{
+		m_hasEnded = true;
+	}
+
+	// Player hit Spike wall
+	float playerLeft = m_pPlayer->getPosition().x - m_pPlayer->getCollisionRadius();
+	if (playerLeft < m_spikeSprite->getLocalBounds().size.x * 2)
+	{
+		m_hasEnded = true;
+	}
+
+	// PLATFORM
+	m_pPlatformHandler->update(dt, m_pPlayer.get());
+	m_pPlatformHandler->checkPlayerCollision(m_pPlayer.get());
+
+	// ENEMY
+    for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
+    {
+        pEnemy->update(dt);
+    }
+
+	// PROJECTILE
+	sf::FloatRect playerBounds = m_pPlayer->getGlobalBounds();
+	std::vector<Platform>& platformVec = m_pPlatformHandler->getPlatformVec();
+	for (size_t i = 0; i < m_projVec.size(); ++i)
+	{
+		m_projVec[i]->update(dt);
+
+		// Check Projectile collisions
+		sf::FloatRect projBounds = m_projVec[i]->getShape().getGlobalBounds();
+		if (checkRectCollision(playerBounds, projBounds))
+		{
+			float distance = (m_pPlayer->getPosition() - m_projVec[i]->getPosition()).lengthSquared();
+			float minDistance = std::pow(m_pPlayer->getCollisionRadius() + m_projVec[i]->getShape().getSize().x, 2);
+			if (distance < minDistance)
+			{
+				if (m_pPlayer->isDashing())
+					m_projVec[i]->setIsDestroyed(true);
+				else
+					m_hasEnded = true;
+			}
+		}
+		for (auto& platform : platformVec)
+		{
+			sf::FloatRect platformBounds = platform.getShape().getGlobalBounds();
+			if (checkRectCollision(platformBounds, projBounds))
+			{
+				m_projVec[i]->setIsDestroyed(true);
+			}
+		}
+
+		if (isProjOOB(m_projVec[i].get()) || m_projVec[i]->getIsDestroyed())
+		{
+			std::swap(m_projVec[i], m_projVec.back());
+			m_projVec.pop_back();
+			continue;
+		}
+	}
+
+	checkEnemyCollisionAndOOB();
+}
+
 void StatePlaying::update(float dt)
 {
 	if (m_hasEnded)
@@ -164,7 +248,7 @@ void StatePlaying::update(float dt)
 
 	handleGroundDissappear();
 	m_pScoreHandler->update();
-	m_pEnemySpawner->spawnEnemy(m_enemies);
+	m_pEnemySpawner->spawnEnemy(m_enemies, m_projVec);
 
     bool isPauseKeyPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
     m_hasPauseKeyBeenReleased |= !isPauseKeyPressed;
@@ -174,38 +258,28 @@ void StatePlaying::update(float dt)
         m_stateStack.push<StatePaused>();
     }
 
-    m_pPlayer->update(dt);
-	if (!m_pPlayer->isInAir() && !m_pPlayer->isOnPlatform() && !m_isGroundBlinking && !m_hasGround)
-	{
-		m_pPlayer->setFallsThroughGround(true);
-	}
-	if (m_pPlayer->getPosition().y > ScreenHeight)
-	{
-		m_hasEnded = true;
-		// m_stateStack.popDeferred();
-	}
-
-	m_pPlatformHandler->update(dt, m_pPlayer.get());
-	m_pPlatformHandler->checkPlayerCollision(m_pPlayer.get());
-
-    for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
-    {
-        pEnemy->update(dt);
-    }
-
-	float playerLeft = m_pPlayer->getPosition().x - m_pPlayer->getCollisionRadius();
-	if (playerLeft < m_spikeSprite->getLocalBounds().size.x * 2)
-	{
-		m_hasEnded = true;
-		// m_stateStack.popDeferred();
-	}
-
-	checkEnemyCollisionAndOOB();
+	updateEntities(dt);
 }
+
+void StatePlaying::renderEntities(sf::RenderTarget& target) const
+{
+	m_pPlatformHandler->draw(target);
+
+	for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
+    	pEnemy->render(target);
+		
+	m_pPlayer->checkCameraShake(target);
+    m_pPlayer->render(target);
+
+	for (auto& proj : m_projVec)
+	{
+		proj->render(target);
+	}
+}
+
 
 void StatePlaying::render(sf::RenderTarget& target) const
 {
-	m_pPlayer->checkCameraShake(target);
 
 	if (m_isGroundBlinking && !m_hasEnded)
 	{
@@ -217,11 +291,7 @@ void StatePlaying::render(sf::RenderTarget& target) const
 		target.draw(m_ground);
 	}
 
-	m_pPlatformHandler->draw(target);
-
-	for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
-    	pEnemy->render(target);
-    m_pPlayer->render(target);
+	renderEntities(target);
 
 	drawSpikeWall(target);
 

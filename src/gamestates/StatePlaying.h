@@ -3,6 +3,7 @@
 #include "IState.h"
 #include "entities/Player.h"
 #include "entities/Enemy.h"
+#include "entities/Projectile.h"
 #include "EnemySpawner.h"
 #include "PlatformHandler.h"
 #include "ScoreHandler.h"
@@ -14,7 +15,8 @@
 class StatePlaying : public IState
 {
 public:
-    StatePlaying(StateStack& stateStack);
+	StatePlaying() = delete;
+    StatePlaying(StateStack& stateStack, GameData& gameData);
     ~StatePlaying() = default;
 
     bool init() override;
@@ -25,10 +27,15 @@ private:
 
 	void checkEnemyCollisionAndOOB();
 	void drawSpikeWall(sf::RenderTarget& target) const;
+	void renderEntities(sf::RenderTarget& target) const;
+	void updateEntities(float dt);
 	void handleGroundDissappear();
 	void handleGroundBlinking();
+	bool isProjOOB(Projectile* proj);
 
     StateStack& m_stateStack;
+	GameData& m_gameData;
+
     std::unique_ptr<EnemySpawner> m_pEnemySpawner;
 	std::unique_ptr<PlatformHandler> m_pPlatformHandler;
     std::unique_ptr<Player> m_pPlayer;
@@ -37,6 +44,8 @@ private:
 	std::unique_ptr<sf::Sprite> m_spikeSprite;
 
     std::vector<std::unique_ptr<Enemy>> m_enemies;
+	std::vector<std::unique_ptr<Projectile>> m_projVec;
+
     sf::RectangleShape m_ground;
     bool m_hasPauseKeyBeenReleased = true;
 

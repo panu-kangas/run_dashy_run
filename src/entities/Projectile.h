@@ -17,8 +17,12 @@ class Projectile : public Entity
 
 	sf::RectangleShape& getShape() { return m_shape; };
 
+	void setIsDestroyed(bool status) { m_isDestroyed = status; };
+	bool getIsDestroyed() { return m_isDestroyed; };
+
 	private:
 
 	sf::RectangleShape m_shape;
+	bool m_isDestroyed = false;
 	
 };

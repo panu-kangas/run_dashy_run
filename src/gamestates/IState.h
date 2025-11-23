@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Window/Keyboard.hpp>
+#include "Constants.h"
 
 namespace sf { class RenderTarget; };
 class StateStack;
@@ -12,4 +13,5 @@ public:
     virtual bool init() = 0;
     virtual void update(float dt) = 0;
     virtual void render(sf::RenderTarget& target) const = 0;
+
 };

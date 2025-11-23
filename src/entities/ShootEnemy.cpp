@@ -4,44 +4,46 @@
 
 #include <iostream>
 
-ShootEnemy::ShootEnemy(float speed) : Enemy(speed, eEnemyType::SHOOT)
+ShootEnemy::ShootEnemy(float speed, float shootInterval, std::vector<std::unique_ptr<Projectile>>& projVec) 
+	: Enemy(speed, eEnemyType::SHOOT), m_projVec(projVec)
 {
 	float enemyY = randomFloat(100, 400);
 
 	m_position.x = ScreenWidth;
 	m_position.y = enemyY;
+	m_shootInterval = shootInterval;
 }
 
 void ShootEnemy::shoot()
 {
 	std::unique_ptr<Projectile> projPtr;
 	
+	// Downward bullets
 	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{-1 * ShootEnemyProjSpeed, ShootEnemyProjSpeed});
     m_projVec.push_back(std::move(projPtr));
-
 	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{0.f, ShootEnemyProjSpeed});
     m_projVec.push_back(std::move(projPtr));
-
 	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{ShootEnemyProjSpeed, ShootEnemyProjSpeed});
     m_projVec.push_back(std::move(projPtr));
-}
 
-bool ShootEnemy::isProjOOB(Projectile* proj)
-{
-	sf::FloatRect bounds = proj->getShape().getGlobalBounds();
+	// Upward bullets
+	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{-1 * ShootEnemyProjSpeed, -1 * ShootEnemyProjSpeed});
+    m_projVec.push_back(std::move(projPtr));
+	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{0.f, -1 * ShootEnemyProjSpeed});
+    m_projVec.push_back(std::move(projPtr));
+	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{ShootEnemyProjSpeed, -1 * ShootEnemyProjSpeed});
+    m_projVec.push_back(std::move(projPtr));
 
-	if (bounds.position.x < 0 || bounds.position.x + bounds.size.x > ScreenWidth)
-		return true;
-	else if (bounds.position.y < 0 || bounds.position.y + bounds.size.y > GroundLevel)
-		return true;
+	// forward
+	projPtr = std::make_unique<Projectile>(m_position, sf::Vector2f{-1 * ShootEnemyProjSpeed, 0});
+    m_projVec.push_back(std::move(projPtr));
 
-	return false;
 }
 
 void ShootEnemy::update(float dt)
 {
 
-	if (m_shootStartClock.getElapsedTime().asSeconds() > ShootEnemyFireInterval && !m_isShooting)
+	if (m_shootStartClock.getElapsedTime().asSeconds() > m_shootInterval && !m_isShooting)
 	{
 		m_isShooting = true;
 		m_shootEffectClock.restart();
@@ -69,26 +71,9 @@ void ShootEnemy::update(float dt)
 		m_pSprite->setPosition(m_position);
 	}
 
-	for (size_t i = 0; i < m_projVec.size(); ++i)
-	{
-		m_projVec[i]->update(dt);
-
-		if (isProjOOB(m_projVec[i].get()))
-		{
-			std::swap(m_projVec[i], m_projVec.back());
-			m_projVec.pop_back();
-			continue;
-		}
-	}
-
 }
 
 void ShootEnemy::render(sf::RenderTarget& target) const
 {
 	target.draw(*m_pSprite);
-
-	for (auto& proj : m_projVec)
-	{
-		proj->render(target);
-	}
 }

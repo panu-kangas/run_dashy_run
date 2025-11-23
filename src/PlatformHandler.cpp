@@ -4,11 +4,16 @@
 
 #include <iostream>
 
+PlatformHandler::PlatformHandler(GameData& gameData) : m_gameData(gameData)
+{
+}
+
+
 void PlatformHandler::spawnPlatform()
 {
-	float rand = randomFloat(0, 150);
+//	float rand = randomFloat(0, 150);
 
-	if (rand <= 20)
+	if (m_platformCount % m_wallSpawnInterval == 0 && m_gameData.playerScore > WallScoreLimit)
 	{
 		// Spawn a wall with a gap
 		
@@ -37,6 +42,8 @@ void PlatformHandler::spawnPlatform()
 
 		m_platformVec.push_back(Platform({platformX, platformY}, {platformSizeX, platformSizeY}, PlatformSpeed));
 	}
+
+	m_platformCount++;
 
 }
 

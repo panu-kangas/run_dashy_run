@@ -6,10 +6,9 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-StateMenu::StateMenu(StateStack& stateStack)
-    : m_stateStack(stateStack)
+StateMenu::StateMenu(StateStack& stateStack, GameData& gameData)
+    : m_stateStack(stateStack), m_gameData(gameData)
 {
-    
 }
 
 bool StateMenu::init()

@@ -6,8 +6,8 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-StatePaused::StatePaused(StateStack& stateStack)
-    : m_stateStack(stateStack)
+StatePaused::StatePaused(StateStack& stateStack, GameData& gameData)
+    : m_stateStack(stateStack), m_gameData(gameData)
 {
     
 }
