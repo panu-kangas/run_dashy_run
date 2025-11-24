@@ -2,7 +2,7 @@
 
 Run Dashy, run! is an endless runner game that I originally created for a code challenge organized by Supercell.  
 
-They provided me with a very basic (and buggy 😁) base game code, I spent 12 hours debugging and developing it into a working game.  
+They provided me with a very basic (and buggy 😁) base game code and I spent 12 hours debugging and developing it into a working game.  
 After the challenge I really wanted to continue developing this game, as I had so many ideas that I wanted to add to the game, but I just didn't have enough time to implement them.  
 
 That's what this repo is about 😎
@@ -10,7 +10,7 @@ That's what this repo is about 😎
 ## Instructions
 
 The game is called "Run Dashy, run!"  
-It's a game about a small yellow ball called Dashy, who loves to run far and get a loooot of points in the process.  
+It's a game about a small yellow smiley face called Dashy, who loves to run far and get a loooot of points in the process.  
 
 The game has in-game instructions too, but here is a quick intro on what's to come:  
 
@@ -28,9 +28,10 @@ Space - Dash
 It's an endless runner game, so the player's goal is to get as many points as they can by surviving in the ever moving environment.  
 
 You get points for travelling, but also for defeating enemies!  
-Defeat enemies by Dashing at them or using the Meteor attack from above.  
+Defeat enemies by dashing at them or using the Meteor attack from above.  
+You can also collect coins in the game, and then use this currency to buy new upgrades for Dashy!  
 
-You lose if you touch enemies without dashing, for touching the nasty spike wall or falling off screen.... you'll soon see what I mean 😉
+You lose if you touch enemies without dashing, if you touch the nasty spike wall or if you fall off screen.... you'll soon see what I mean 😉
 
 ## About the process
 
@@ -38,7 +39,7 @@ By the end of the challenge I had implemented:
 
 - Dashy's movement abilities and their visual effects (jump, double jump, turbo jump, meteor attack & side dash)
 - Randomly spawning enemies with continuously faster movement speed and spawn rate
-- Platforms that can be jumped on (but were penetrable from under and sided)
+- Platforms that can be jumped on (but were penetrable from under and the sides)
 - Static spike wall at the end of the screen
 - Score system and game states
 - Vanishing floor mechanic
@@ -50,13 +51,14 @@ My additions after the challenge:
 - Made the floor not blink when it returns
 - Fixed a bug in player border update logic
 - Fixed introduction texts to underline that it is indeed interactive
-- Updated dash reset logic - when player successfully hits and enemy with a dash, both the dash and jumping abilities get a reset.
+- Updated dash reset logic - when player successfully hits an enemy with a dash, both the dash and jumping abilities get a reset.
 - Fixed a bug where player would stop on the ground level briefly even when the floor has vanished
 - Made the platforms solid - added bottom, left and right collisions for them
-- Added new obstacle to the game: a wall with a gap. Player needs to move themselves through the gap in order to survive.
-- Added new enemy type: ShootingEnemy.
-- Added Coin system: player can now collect coins while playing the game. Coins are persistant through the game, and can be later used to buy upgrades.
-- Added Upgrade Shop and two new abilities. Player can now spend coins on these upgrades that boost Dashy's movement abilities.
+- Added a new obstacle to the game: a wall with a gap. Player needs to move themselves through the gap in order to survive.
+- Added new enemy type: ShootingEnemy. They shoot bullets around them at a steady pace.
+- Added Coin system: player can now collect coins while playing the game. Coins are persistant through game runs, and can be later used to buy upgrades.
+- Added Upgrade Shop and two new upgrades. Player can now spend coins on these upgrades to boost Dashy's movement abilities.
+- Balanced the game a loooot! Fixed speed and spawn time changes that happen over time, made enemy spawning randomness better, added better logic for new enemy and obstacle type spawning etc.
   
 
 ## Prerequisites
