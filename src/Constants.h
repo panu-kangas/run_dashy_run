@@ -51,7 +51,7 @@ const float PlayerSpeed = 400.f;
 const float GroundEnemyBaseSpeed = 200.f;
 const float AirEnemyBaseSpeed = 300.f;
 const float ShootEnemyBaseSpeed = 100.f;
-const float EnemySpeedAddition = 30.f;
+const float EnemySpeedAddition = 40.f;
 const float EnemyMaxSpeedAddition = 1000.f;
 
 // Enemy Spawning
@@ -70,12 +70,12 @@ const float ShootEnemyProjSpeed = 450.f;
 const float ScoreInterval = 0.5f;
 
 // Score limits
-const int ShootEnemyScoreLimit = 120;
+const int ShootEnemyScoreLimit = 100;
 const int WallScoreLimit = 200;
-const int GroundVanishScoreLimit = 300;
+const int GroundVanishScoreLimit = 400;
 
 // Coins
-const float CoinInitSpeed = 250.f;
+const float CoinInitSpeed = 300.f;
 const float CoinInitSpawnInterval = 4.f;
 
 // Colors
