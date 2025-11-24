@@ -56,6 +56,7 @@ My additions after the challenge:
 - Added new obstacle to the game: a wall with a gap. Player needs to move themselves through the gap in order to survive.
 - Added new enemy type: ShootingEnemy.
 - Added Coin system: player can now collect coins while playing the game. Coins are persistant through the game, and can be later used to buy upgrades.
+- Added Upgrade Shop and two new abilities. Player can now spend coins on these upgrades that boost Dashy's movement abilities.
   
 
 ## Prerequisites
