@@ -15,9 +15,8 @@ public:
     void update(float dt) override;
     void render(sf::RenderTarget& target) const override;
 
-public:
+private:
     StateStack& m_stateStack;
-	GameData& m_gameData;
 
     const IState* m_pPrevState = nullptr;
     std::unique_ptr<sf::Text> m_pText;

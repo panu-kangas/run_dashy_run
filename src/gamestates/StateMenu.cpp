@@ -6,8 +6,8 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-StateMenu::StateMenu(StateStack& stateStack, GameData& gameData)
-    : m_stateStack(stateStack), m_gameData(gameData)
+StateMenu::StateMenu(StateStack& stateStack, [[maybe_unused]] GameData& gameData)
+    : m_stateStack(stateStack)
 {
 }
 

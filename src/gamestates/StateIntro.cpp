@@ -1,5 +1,5 @@
 #include "StateIntro.h"
-#include "StatePlaying.h"
+#include "StateUpgradeShop.h"
 #include "StateStack.h"
 #include "ResourceManager.h"
 #include "utils.h"
@@ -23,7 +23,7 @@ bool StateIntro::init()
     m_ground.setPosition({0.0f, GroundLevel});
     m_ground.setFillColor(GroundColor);
 
-	m_pPlayer = std::make_unique<Player>();
+	m_pPlayer = std::make_unique<Player>(m_gameData);
     if (!m_pPlayer || !m_pPlayer->init())
 	{
         return false;
@@ -44,13 +44,15 @@ void StateIntro::update(float dt)
     {
         m_hasStartKeyBeenPressed = false;
         m_hasStartKeyBeenReleased = false;
-        m_stateStack.push<StatePlaying>();
+        m_stateStack.push<StateUpgradeShop>();
     }
     m_hasStartKeyBeenReleased |= m_hasStartKeyBeenPressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter);
 }
 
 void StateIntro::render(sf::RenderTarget& target) const
 {
+	target.draw(m_ground);
+
 	drawHeaderText(m_pFont, target, "Welcome to the interactive Introduction!");
 	drawCenteredText(m_pFont, target, "Here is our main character, Dashy. Say hello!", - 320.f);
 	drawCenteredText(m_pFont, target, "Our brave little Dashy is very talented! He can:", - 260.f);
@@ -63,10 +65,10 @@ void StateIntro::render(sf::RenderTarget& target) const
 	drawCenteredText(m_pFont, target, "Dashy is very powerful when dashing (space) or while performing the Meteor attack (S mid air)", 20.f, true);
 	drawCenteredText(m_pFont, target, "You can even kill enemies and get points with these skills!", 55.f, true);
 	drawCenteredText(m_pFont, target, "Please, try these moves now and then press Enter to move on to the actual game", 200.f, true);
+	drawCenteredText(m_pFont, target, "Oh and hey, remember to collect coins while you play!", 350.f, true);
+	drawCenteredText(m_pFont, target, "You can use coins at the Upgrade Shop to upgrade Dashy's abilities", 385.f, true);
 
 	m_pPlayer->checkCameraShake(target);
-
-	target.draw(m_ground);
 
 	m_pPlayer->render(target);
 

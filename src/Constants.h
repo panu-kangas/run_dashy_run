@@ -91,4 +91,6 @@ struct GameData
 {
 	int playerScore = 0;
 	int playerCoins = 0;
+	bool hasTurboUpgrade = false;
+	bool hasDashUpgrade = false;
 };

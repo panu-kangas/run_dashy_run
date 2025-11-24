@@ -19,17 +19,27 @@ StatePlaying::StatePlaying(StateStack& stateStack, GameData& gameData)
 
 bool StatePlaying::init()
 {
-	const sf::Texture* pTexture = ResourceManager::getOrLoadTexture("spike.png");
-	if (pTexture == nullptr)
+	const sf::Texture* pSpikeTexture = ResourceManager::getOrLoadTexture("spike.png");
+	if (pSpikeTexture == nullptr)
 	{
         return false;
 	}
-    m_spikeSprite = std::make_unique<sf::Sprite>(*pTexture);
+    m_spikeSprite = std::make_unique<sf::Sprite>(*pSpikeTexture);
     if (!m_spikeSprite)
 	{
         return false;
 	}
 	m_spikeSprite->setScale({2.0f, 2.0f});
+
+	const sf::Texture* pLaserTexture = ResourceManager::getOrLoadTexture("laser_blue.png");
+	m_laserSprite = std::make_unique<sf::Sprite>(*pLaserTexture);
+    if (!m_laserSprite)
+	{
+        return false;
+	}
+	sf::FloatRect laserLocalBounds = m_laserSprite->getLocalBounds();
+	m_laserSprite->setOrigin({laserLocalBounds.size.x / 2, laserLocalBounds.size.y / 2});
+	m_laserSprite->setScale({150.0f, 2.0f});
 
 	m_pFont = ResourceManager::getOrLoadFont("Lavigne.ttf");
     if (m_pFont == nullptr)
@@ -39,7 +49,7 @@ bool StatePlaying::init()
     m_ground.setPosition({0.0f, GroundLevel});
     m_ground.setFillColor(GroundColor);
 
-    m_pPlayer = std::make_unique<Player>();
+    m_pPlayer = std::make_unique<Player>(m_gameData);
     if (!m_pPlayer || !m_pPlayer->init())
         return false;
     m_pPlayer->setPosition(sf::Vector2f(200, GroundLevel));
@@ -73,6 +83,9 @@ void StatePlaying::checkEnemyCollisionAndOOB()
 	size_t i = 0;
     while (i < m_enemies.size())
     {
+		bool enemyDied = false;
+
+		// OOB
 		if (m_enemies[i]->getPosition().x <= leftBoundary)
 		{
 			std::swap(m_enemies[i], m_enemies.back());
@@ -80,41 +93,30 @@ void StatePlaying::checkEnemyCollisionAndOOB()
 			continue;
 		}
 
-        float distance = (m_pPlayer->getPosition() - m_enemies[i]->getPosition()).lengthSquared();
-        float minDistance = std::pow(Player::collisionRadius + m_enemies[i]->getCollisionRadius(), 2.0f);
-
-        if (distance <= minDistance)
-        {
-			if (m_pPlayer->isDashing())
+		// Dash laser collision
+		sf::Vector2f playerPos = m_pPlayer->getPosition();
+		sf::Vector2f enemyPos = m_enemies[i]->getPosition();
+		if (m_gameData.hasDashUpgrade && m_pPlayer->isSideDashing())
+		{
+			float minHeight = playerPos.y - 15.f;
+			float maxHeight = playerPos.y + 15.f;
+			if (enemyPos.y > minHeight && enemyPos.y < maxHeight)
 			{
-				eEnemyType type = m_enemies[i]->getType();
-				std::swap(m_enemies[i], m_enemies.back());
-				m_enemies.pop_back();
 				m_pPlayer->resetDash();
+				enemyDied = true;
+			}
+		}
 
-				switch(type)
-				{
-					case GROUND:
-					{
-						m_pScoreHandler->addScore(10);
-						break ;
-					}
-					case AIR:
-					{
-						m_pScoreHandler->addScore(15);
-						break ;
-					}
-					case SHOOT:
-					{
-						m_pScoreHandler->addScore(30);
-						break ;
-					}
-					default:
-					{
-						break ;
-					}
-				}
-				continue;
+		// Regular collision
+		bool isPlayerDashing = m_pPlayer->isDashing();
+        float distance = (playerPos - enemyPos).lengthSquared();
+        float minDistance = std::pow(Player::collisionRadius + m_enemies[i]->getCollisionRadius(), 2.0f);
+        if (!enemyDied && distance <= minDistance)
+        {
+			if (isPlayerDashing)
+			{
+				m_pPlayer->resetDash();
+				enemyDied = true;
 			}
 			else
 			{
@@ -122,13 +124,42 @@ void StatePlaying::checkEnemyCollisionAndOOB()
 				break;
 			}
         }
+
+		if (enemyDied)
+		{
+			eEnemyType type = m_enemies[i]->getType();
+			std::swap(m_enemies[i], m_enemies.back());
+			m_enemies.pop_back();
+	
+			switch(type)
+			{
+				case GROUND:
+				{
+					m_pScoreHandler->addScore(10);
+					break ;
+				}
+				case AIR:
+				{
+					m_pScoreHandler->addScore(15);
+					break ;
+				}
+				case SHOOT:
+				{
+					m_pScoreHandler->addScore(30);
+					break ;
+				}
+				default:
+				{
+					break ;
+				}
+			}
+		}
 		i++;
     }
 
     if (playerDied)
 	{
 		m_hasEnded = true;
-
 	}
 }
 
@@ -314,11 +345,6 @@ void StatePlaying::renderEntities(sf::RenderTarget& target) const
 void StatePlaying::render(sf::RenderTarget& target) const
 {
 
-	if (m_isGroundBlinking && !m_hasEnded)
-	{
-		drawHeaderText(m_pFont, target, "Watch out! The floor is about to vanish!");
-	}
-
 	if (m_isGroundVisible)
 	{
 		target.draw(m_ground);
@@ -326,6 +352,17 @@ void StatePlaying::render(sf::RenderTarget& target) const
 
 	renderEntities(target);
 	drawSpikeWall(target);
+
+	if (m_gameData.hasDashUpgrade && m_pPlayer->isSideDashing())
+	{
+		m_laserSprite->setPosition(m_pPlayer->getPosition());
+		target.draw(*m_laserSprite);
+	}
+
+	if (m_isGroundBlinking && !m_hasEnded)
+	{
+		drawHeaderText(m_pFont, target, "Watch out! The floor is about to vanish!");
+	}
 
 	if (m_hasEnded)
 	{

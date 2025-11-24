@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-Player::Player()
+Player::Player(GameData& gameData) : m_gameData(gameData)
 {
 }
 
@@ -286,7 +286,9 @@ void Player::handleInput()
 
 void Player::checkTimers()
 {
-	if (m_isLoadingTurbo && m_turboLoadClock.getElapsedTime().asSeconds() >= TurboJumpLoadTime && !m_fallsThroughGround)
+	float turboJumpTime = m_gameData.hasTurboUpgrade ? 0.4f : TurboJumpLoadTime;
+
+	if (m_isLoadingTurbo && m_turboLoadClock.getElapsedTime().asSeconds() >= turboJumpTime && !m_fallsThroughGround)
 	{
 		m_isLoadingTurbo = false;
 		m_isTurboJumping = true;
@@ -345,7 +347,8 @@ void Player::updateJumpLoadBar()
 	}
 	
 	float turboLoadCurTime = m_turboLoadClock.getElapsedTime().asSeconds();
-	float barLength = (turboLoadCurTime / TurboJumpLoadTime) * TurboJumpBarLength;
+	float turboJumpTime = m_gameData.hasTurboUpgrade ? 0.4f : TurboJumpLoadTime;
+	float barLength = (turboLoadCurTime / turboJumpTime) * TurboJumpBarLength;
 	if (barLength >= TurboJumpBarLength)
 	{
 		barLength = TurboJumpBarLength;

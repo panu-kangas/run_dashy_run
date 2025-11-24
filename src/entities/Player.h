@@ -15,7 +15,8 @@ class Player final : public Entity
 public:
     static constexpr float collisionRadius = 23.0f;
 
-    Player();
+    Player() = delete;
+	Player(GameData& gameData);
     virtual ~Player() = default;
     
     bool init() override;
@@ -28,6 +29,7 @@ public:
 	bool isOnPlatform() { return m_isOnPlatform; };
 
 	bool isDashing() { return m_meteorAttack || m_isDashing; };
+	bool isSideDashing() { return m_isDashing; };
 	void resetDash();
 	void setDashInactive();
 	bool isMeteorAttacking() { return m_meteorAttack; };
@@ -74,6 +76,8 @@ private:
 	size_t m_shakeIdx = 0;
 	sf::Clock m_shakeTimer;
 	float m_shakeInterval = 0.04f;
+
+	GameData& m_gameData;
 
 	bool m_isInAir = false;
 	bool m_didJump = false;

@@ -45,6 +45,7 @@ private:
     std::unique_ptr<CoinHandler> m_pCoinHandler;
 
 	std::unique_ptr<sf::Sprite> m_spikeSprite;
+	std::unique_ptr<sf::Sprite> m_laserSprite;
 
     std::vector<std::unique_ptr<Enemy>> m_enemies;
 	std::vector<std::unique_ptr<Projectile>> m_projVec;

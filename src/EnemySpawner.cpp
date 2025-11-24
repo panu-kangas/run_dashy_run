@@ -22,9 +22,7 @@ void EnemySpawner::updateSpeedAndSpawnInterval()
 			m_enemySpeedAddition += EnemySpeedAddition;
 
 		if (m_shootInterval > 1.f)
-		{
 			m_shootInterval -= 0.3f;
-		}
 
 		m_speedUpdateClock.restart();
 	}

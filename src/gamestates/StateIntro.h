@@ -21,7 +21,7 @@ public:
     void update(float dt) override;
     void render(sf::RenderTarget& target) const override;
 
-public:
+private:
     StateStack& m_stateStack;
 	GameData& m_gameData;
 
