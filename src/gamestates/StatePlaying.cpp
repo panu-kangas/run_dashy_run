@@ -38,7 +38,7 @@ bool StatePlaying::init()
         return false;
 	}
 	sf::FloatRect laserLocalBounds = m_laserSprite->getLocalBounds();
-	m_laserSprite->setOrigin({laserLocalBounds.size.x / 2, laserLocalBounds.size.y / 2});
+	m_laserSprite->setOrigin({0, laserLocalBounds.size.y / 2});
 	m_laserSprite->setScale({150.0f, 2.0f});
 
 	m_pFont = ResourceManager::getOrLoadFont("Lavigne.ttf");
@@ -98,9 +98,9 @@ void StatePlaying::checkEnemyCollisionAndOOB()
 		sf::Vector2f enemyPos = m_enemies[i]->getPosition();
 		if (m_gameData.hasDashUpgrade && m_pPlayer->isSideDashing())
 		{
-			float minHeight = playerPos.y - 15.f;
-			float maxHeight = playerPos.y + 15.f;
-			if (enemyPos.y > minHeight && enemyPos.y < maxHeight)
+			bool hasCollision = checkRectCollision(m_laserSprite->getGlobalBounds(), m_enemies[i]->getGlobalBounds());
+			bool isFacingLeft = m_pPlayer->isFacingLeft();
+			if (hasCollision && ((enemyPos.x > playerPos.x && !isFacingLeft) || (enemyPos.x < playerPos.x && isFacingLeft)))
 			{
 				m_pPlayer->resetDash();
 				enemyDied = true;
@@ -226,6 +226,18 @@ void StatePlaying::updateEntities(float dt)
 	if (!m_pPlayer->isInAir() && !m_pPlayer->isOnPlatform() && !m_isGroundBlinking && !m_hasGround)
 	{
 		m_pPlayer->setFallsThroughGround(true);
+	}
+
+	// Update Laser sprite
+	sf::Vector2f playerPos = m_pPlayer->getPosition();
+	float laserLength = m_laserSprite->getGlobalBounds().size.x;
+	if (m_pPlayer->isFacingLeft())
+	{
+		m_laserSprite->setPosition({playerPos.x - laserLength, playerPos.y});
+	}
+	else
+	{
+		m_laserSprite->setPosition(playerPos);
 	}
 
 	// Player fell out of screen
@@ -355,7 +367,6 @@ void StatePlaying::render(sf::RenderTarget& target) const
 
 	if (m_gameData.hasDashUpgrade && m_pPlayer->isSideDashing())
 	{
-		m_laserSprite->setPosition(m_pPlayer->getPosition());
 		target.draw(*m_laserSprite);
 	}
 

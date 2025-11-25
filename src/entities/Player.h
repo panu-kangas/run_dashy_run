@@ -40,7 +40,6 @@ public:
 	void setIsTurboJumping(bool status) { m_isTurboJumping = status; };
 	void setIsInAir(bool status) { m_isInAir = status; };
 
-
 	void checkCameraShake(sf::RenderTarget& target);
 
 //	void setOutlinePos(sf::Vector2f pos) { m_playerOutlines.setPosition(pos); };

@@ -43,8 +43,8 @@ private:
 	std::unique_ptr<sf::Text> m_turboBtnPriceText;
 	std::unique_ptr<sf::Text> m_dashBtnPriceText;
 
-	int m_turboUpgradePrice = 10;
-	int m_dashUpgradePrice = 20;
+	int m_turboUpgradePrice = 1;
+	int m_dashUpgradePrice = 2;
 
 	float m_activeOutlineThickness = 3.0f;
 

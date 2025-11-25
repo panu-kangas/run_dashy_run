@@ -25,6 +25,8 @@ public:
 
     float getCollisionRadius() { return m_collisionRadius; }
 
+	sf::FloatRect getGlobalBounds() { return m_pSprite->getGlobalBounds(); };
+
     int getHealth() const { return m_health; }
     void setHealth(int health) { m_health = health; }
 
